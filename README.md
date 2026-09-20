@@ -2,7 +2,7 @@
 
 ## Overview
 
-This repository contains the R code used for the statistical analyses and graphical outputs of the study entitled:
+This repository contains the experimental dataset and R code used for the statistical analyses and graphical outputs of the study entitled:
 
 **"In Vitro Germination of Polyembryonic Mango (*Mangifera indica* L.) cv. 'Chulucanas' Seeds in Liquid Medium Supplemented with Coconut Water and Lemon Juice"**
 
@@ -20,7 +20,7 @@ The factorial combination resulted in **12 treatments (T1–T12)**. Each treatme
 
 ## Response Variables
 
-The statistical analyses include fruit and seed characterization and the following in vitro responses:
+The statistical analyses included fruit and seed characterization and the following in vitro responses:
 
 - Developed embryos (DE)
 - Developed plumules (DP)
@@ -29,13 +29,13 @@ The statistical analyses include fruit and seed characterization and the followi
 - Microbial contamination (MC)
 - In vitro establishment (IVE)
 
-Fruit characterization variables include fruit length, fruit width, fruit weight, total soluble solids, fruit firmness, and seed weight without endocarp.
+Fruit and seed characterization variables included fruit length, fruit width, fruit weight, total soluble solids, fruit firmness, and seed weight without endocarp.
 
 ## Statistical Analysis
 
 Statistical analyses were performed in **R**.
 
-Developed embryos were analyzed using a **Conway–Maxwell–Poisson (COM-Poisson) generalized linear model with a log link**, whereas developed plumules were analyzed using a **Poisson model with a log link**.
+Developed embryos were analyzed using a **Conway–Maxwell–Poisson (COM-Poisson) generalized linear model with a log link**, whereas developed plumules were analyzed using a **Poisson generalized linear model with a log link**.
 
 Phenolic exudation, microbial contamination, and in vitro establishment were analyzed using **binomial generalized linear models with a logit link and bias-reduced estimation**.
 
@@ -57,7 +57,7 @@ Multivariate analyses included:
 
 Complete R script used to:
 
-- Import and prepare the experimental data
+- Import and prepare the experimental dataset
 - Generate descriptive statistics
 - Fit statistical models
 - Perform model diagnostics
@@ -70,23 +70,34 @@ Complete R script used to:
 - Generate the Z-score heatmap
 - Export statistical results and graphical outputs
 
+### `mango_chulucanas_raw_data.csv`
+
+Experimental dataset used for the statistical analyses.
+
+The dataset contains **240 seed-level observations corresponding to 12 treatments**, with four replicates and five seeds per replicate.
+
+This file is read directly by `Supplementary_Material_S1_Statistical_Analysis.R`, allowing the statistical analyses to be reproduced without requiring access to an external data source.
+
 ## Main R Packages
 
 The analyses use the following R packages:
 
-`tidyverse`, `googlesheets4`, `janitor`, `car`, `glmmTMB`, `DHARMa`, `emmeans`, `brglm2`, `multcomp`, `multcompView`, `Hmisc`, `FactoMineR`, `ComplexHeatmap`, `circlize`, `cowplot`, `scales`, `writexl`, and related dependencies.
+`tidyverse`, `janitor`, `car`, `glmmTMB`, `DHARMa`, `emmeans`, `brglm2`, `multcomp`, `multcompView`, `Hmisc`, `FactoMineR`, `ComplexHeatmap`, `circlize`, `cowplot`, `scales`, and `writexl`.
 
 ## Reproducibility
 
 To reproduce the analyses:
 
 1. Download or clone this repository.
-2. Open `Supplementary_Material_S1_Statistical_Analysis.R` in R or RStudio.
-3. Install the required R packages if they are not already installed.
-4. Run the script sequentially from beginning to end.
-5. Statistical tables, diagnostic outputs, and figures will be generated automatically.
+2. Keep `Supplementary_Material_S1_Statistical_Analysis.R` and `mango_chulucanas_raw_data.csv` in the same directory.
+3. Open `Supplementary_Material_S1_Statistical_Analysis.R` in R or RStudio.
+4. Install the required R packages if they are not already installed.
+5. Set the working directory to the repository folder.
+6. Run the script sequentially from beginning to end.
 
-A random seed is specified in the script to improve computational reproducibility.
+The script imports `mango_chulucanas_raw_data.csv` directly and generates the statistical analyses, model diagnostics, tables, and figures associated with the manuscript.
+
+A random seed (`set.seed(123)`) is specified in the script to improve computational reproducibility.
 
 ## Output
 
@@ -101,18 +112,22 @@ The R script generates the statistical results associated with the manuscript, i
 - **Figure 4:** Principal component analysis (PCA)
 - **Figure 5:** Heatmap based on standardized Z-scores
 
+Generated outputs are saved in the `Results_FINAL` directory created automatically by the R script.
+
 ## Authors
 
 **Gabriela Cárdenas-Huamán, Julieta Llihua-Quispe, Max Ramírez-Rojas, and Henry Morocho-Romero**
 
 ## Data Availability
 
-The R code required to reproduce the statistical analyses is publicly available in this GitHub repository.
+The experimental dataset and R code used to reproduce the statistical analyses presented in the manuscript are publicly available in this GitHub repository.
+
+The experimental dataset is provided as `mango_chulucanas_raw_data.csv`, and the complete statistical workflow is provided in `Supplementary_Material_S1_Statistical_Analysis.R`.
 
 ## Citation
 
-If you use the code or data from this repository, please cite the associated scientific article. Full bibliographic information will be added after publication.
+If you use the data or R code from this repository, please cite the associated scientific article. Full bibliographic information will be added after publication.
 
 ## Contact
 
-For questions regarding the statistical analyses or repository, please contact the corresponding authors through the contact information provided in the associated publication.
+For questions regarding the dataset, statistical analyses, or repository, please contact the corresponding authors through the contact information provided in the associated publication.
