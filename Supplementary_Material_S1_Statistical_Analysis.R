@@ -8,7 +8,7 @@
 rm(list=ls()); graphics.off(); gc(); set.seed(123)
 options(contrasts=c("contr.sum","contr.poly"),scipen=999)
 
-required_packages <- c("googlesheets4","tidyverse","janitor","car","glmmTMB","DHARMa",
+required_packages <- c("tidyverse","janitor","car","glmmTMB","DHARMa",
                        "emmeans","brglm2","multcomp","multcompView","FactoMineR","Hmisc",
                        "ComplexHeatmap","circlize","cowplot","scales","writexl")
 missing_packages <- required_packages[!vapply(required_packages,requireNamespace,logical(1),quietly=TRUE)]
@@ -37,9 +37,9 @@ theme_article <- function(base_size=12){
 ggplot2::theme_set(theme_article())
 
 # 2. DATA IMPORT AND CLEANING ---------------------------------------------------
-SHEET_URL <- "https://docs.google.com/spreadsheets/d/14KitmqBSxjkpdRTOGGMeaQZM_E0FU8PFmquQUVeLj3Q/edit"
-googlesheets4::gs4_deauth()
-data_raw <- googlesheets4::read_sheet(ss=SHEET_URL,sheet="Hoja 1",show_col_types=FALSE)
+DATA_FILE <- "mango_chulucanas_raw_data.csv"
+if(!file.exists(DATA_FILE)) stop("Data file not found: ", DATA_FILE)
+data_raw <- readr::read_csv(DATA_FILE,show_col_types=FALSE)
 if(ncol(data_raw)<17) stop("The input dataset must contain at least 17 columns.")
 
 data_seed <- data_raw %>% janitor::clean_names()
