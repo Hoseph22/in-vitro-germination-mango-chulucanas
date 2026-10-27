@@ -762,7 +762,7 @@ print(
 
 
 
-# 8. FIGURE 1: PE, MC AND IVE --------------------------------------------------
+# 8. FIGURE 3: PE, MC AND IVE --------------------------------------------------
 draw_binary <- function(df,y_label){
   ymax <- max(1.08,max(df$Upper_CI,na.rm=TRUE)+.12)
   ggplot2::ggplot(df,ggplot2::aes(Treatment,Mean,fill=Treatment))+
@@ -777,7 +777,8 @@ Fig1A <- draw_binary(PE_emm,"PE (%)")+ggplot2::labs(tag="A"); Fig1B <- draw_bina
 Fig1C <- draw_binary(IVE_emm,"IVE (%)")+ggplot2::labs(tag="C")
 Figure1 <- cowplot::plot_grid(cowplot::plot_grid(Fig1A,Fig1B,ncol=2,align="hv",axis="tblr"),
                               cowplot::plot_grid(NULL,Fig1C,NULL,ncol=3,rel_widths=c(.5,1,.5)),ncol=1)
-ggplot2::ggsave("Results_FINAL/Figure1_PE_MC_IVE.jpg",Figure1,width=12,height=9,units="in",dpi=600,bg="white")
+ggplot2::ggsave("Results_FINAL/Figure3_PE_MC_IVE.jpg", Figure1, width=12, height=9, units="in", dpi=600, bg="white")
+
 
 # 9. FIGURE 2: DE, DP AND LDS --------------------------------------------------
 mean_se <- function(data,variable) data %>% dplyr::group_by(Treatment) %>%
@@ -834,7 +835,7 @@ build_corr_plot <- function(corr_long,tag_label){
 Fig3A <- build_corr_plot(compute_corr_long(rep_data %>% dplyr::filter(Maturity=="PM")),"A")
 Fig3B <- build_corr_plot(compute_corr_long(rep_data %>% dplyr::filter(Maturity=="CM")),"B")
 Figure3 <- cowplot::plot_grid(Fig3A,Fig3B,ncol=1,align="v",axis="lr")
-ggplot2::ggsave("Results_FINAL/Figure3_Spearman.jpg",Figure3,width=13,height=20,units="in",dpi=600,bg="white")
+ggplot2::ggsave("Results_FINAL/Figure4_Spearman.jpg",Figure3,width=13,height=20,units="in",dpi=600,bg="white")
 
 # 11. FIGURE 4: PCA -------------------------------------------------------------
 pca_vars <- c("Fruit_length","Fruit_width","Fruit_weight","TSS","Firmness","Seed_weight","Embryos_mean","Shoots_mean",
@@ -858,7 +859,7 @@ Figure4 <- ggplot2::ggplot()+ggplot2::geom_hline(yintercept=0,linetype="dashed",
   ggplot2::scale_color_manual(values=treatment_colors,limits=treatment_levels,drop=FALSE)+ggplot2::coord_cartesian(xlim=c(-panel_lim,panel_lim),ylim=c(-panel_lim,panel_lim),clip="off")+
   ggplot2::labs(x=paste0("PC1 (",pct_dim1,"%)"),y=paste0("PC2 (",pct_dim2,"%)"),color="Treatment")+theme_article(12)+
   ggplot2::theme(legend.position="bottom",legend.direction="horizontal")+ggplot2::guides(color=ggplot2::guide_legend(nrow=2,byrow=TRUE))
-ggplot2::ggsave("Results_FINAL/Figure4_PCA.jpg",Figure4,width=11,height=9.5,units="in",dpi=600,bg="white",limitsize=FALSE)
+ggplot2::ggsave("Results_FINAL/Figure5_PCA.jpg",Figure4,width=11,height=9.5,units="in",dpi=600,bg="white",limitsize=FALSE)
 
 # 12. FIGURE 5: Z-SCORE HEATMAP ------------------------------------------------
 heat_raw <- rep_data %>% dplyr::group_by(Treatment) %>% dplyr::summarise(FL=mean(Fruit_length,na.rm=TRUE),FW=mean(Fruit_width,na.rm=TRUE),
@@ -873,7 +874,7 @@ ht <- ComplexHeatmap::Heatmap(heat_z_matrix,name="Z-score",col=grDevices::colorR
   heatmap_legend_param=list(title="Z-score",title_position="leftcenter-rot",at=c(-4,-2,0,2,4),labels=c("−4","−2","0","2","4")),
   cell_fun=function(j,i,x,y,w,h,fill) grid::grid.text(z_text_matrix[i,j],x,y,gp=grid::gpar(fontsize=9,fontfamily=FONT,col="black")),
   row_names_gp=grid::gpar(fontsize=10,fontfamily=FONT),column_names_gp=grid::gpar(fontsize=10,fontfamily=FONT),column_names_rot=0,border="white")
-grDevices::jpeg("Results_FINAL/Figure5_Heatmap.jpg",width=11,height=9,units="in",res=600,quality=95)
+grDevices::jpeg("Results_FINAL/Figure6_Heatmap.jpg",width=11,height=9,units="in",res=600,quality=95)
 ComplexHeatmap::draw(ht,heatmap_legend_side="left",padding=grid::unit(c(2,2,2,2),"mm")); grDevices::dev.off()
 
 # 13. EXPORT TABLES AND REPRODUCIBILITY INFORMATION -----------------------------
