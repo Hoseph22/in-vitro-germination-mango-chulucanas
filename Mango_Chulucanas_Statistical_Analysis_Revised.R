@@ -8,7 +8,7 @@
 rm(list=ls()); graphics.off(); gc(); set.seed(123)
 options(contrasts=c("contr.sum","contr.poly"),scipen=999)
 
-required_packages <- c("googlesheets4","tidyverse","janitor","car","glmmTMB","DHARMa",
+required_packages <- c("tidyverse","janitor","car","glmmTMB","DHARMa",
                        "emmeans","brglm2","multcomp","multcompView","FactoMineR","Hmisc",
                        "ComplexHeatmap","circlize","cowplot","scales","writexl")
 missing_packages <- required_packages[!vapply(required_packages,requireNamespace,logical(1),quietly=TRUE)]
@@ -37,18 +37,12 @@ theme_article <- function(base_size=12){
 ggplot2::theme_set(theme_article())
 
 # 2. DATA IMPORT AND CLEANING
-SHEET_URL <- "https://docs.google.com/spreadsheets/d/14KitmqBSxjkpdRTOGGMeaQZM_E0FU8PFmquQUVeLj3Q/edit"
-
-googlesheets4::gs4_deauth()
-
-data_raw <- googlesheets4::read_sheet(
-  ss = SHEET_URL,
-  sheet = "Hoja 1"
-)
-# Verificar importación
-dim(data_raw)
-head(data_raw)
-if(ncol(data_raw)<17) stop("The input dataset must contain at least 17 columns.")
+DATA_FILE <- "mango_chulucanas_raw_data.csv"
+if (!file.exists(DATA_FILE)) stop("Dataset not found: ", DATA_FILE)
+data_raw <- utils::read.csv(DATA_FILE, check.names = FALSE,
+                            stringsAsFactors = FALSE, fileEncoding = "UTF-8-BOM")
+if (ncol(data_raw) != 17L) stop("Expected exactly 17 columns in the experimental CSV.")
+if (nrow(data_raw) != 240L) stop("Expected 240 seed-level records.")
 
 data_seed <- data_raw %>% janitor::clean_names()
 names(data_seed)[1:17] <- c("ID","Description","Rep","Treatment_raw","Seed","Fruit_length","Fruit_width","Fruit_weight",
@@ -56,7 +50,7 @@ names(data_seed)[1:17] <- c("ID","Description","Rep","Treatment_raw","Seed","Fru
 numeric_vars <- c("Fruit_length","Fruit_width","Fruit_weight","TSS","Firmness","Seed_weight","Embryos","Shoots","Leaves",
                   "Phenolics","Contamination","Establishment")
 data_seed <- data_seed %>%
-  dplyr::mutate(dplyr::across(dplyr::all_of(numeric_vars),~suppressWarnings(as.numeric(unlist(.x,use.names=FALSE)))),
+  dplyr::mutate(dplyr::across(dplyr::all_of(numeric_vars),~suppressWarnings(as.numeric(gsub(",", ".", trimws(as.character(.x)), fixed=TRUE)))),
                 Treatment_num=as.numeric(stringr::str_extract(as.character(Treatment_raw),"\\d+")),
                 Treatment=factor(paste0("T",Treatment_num),levels=treatment_levels),
                 Maturity=factor(ifelse(Treatment_num<=6,"PM","CM"),levels=c("PM","CM")),
@@ -65,6 +59,19 @@ data_seed <- data_seed %>%
                                            Treatment_num %in% c(3,6,9,12)~"3"),levels=c("0","1.5","3")),
                 Rep_ID=interaction(Treatment,Rep,drop=TRUE),Phenolics_yes=as.integer(Phenolics>0),
                 Contamination_yes=as.integer(Contamination>0),Establishment_yes=as.integer(Establishment>0))
+# Validate decimal-comma conversion and the observed TSS measurement pattern.
+if (anyNA(data_seed[, c("Fruit_length", "Fruit_width", "Fruit_weight",
+                         "Firmness", "Seed_weight", "Embryos", "Shoots", "Leaves")])) {
+  stop("Unexpected missing values after numeric conversion; check decimal separators.")
+}
+if (sum(!is.na(data_seed$TSS)) != 48L) {
+  stop("Expected 48 observed TSS values (one per experimental replicate).")
+}
+if (!all(data_seed %>% dplyr::group_by(Treatment, Rep) %>%
+         dplyr::summarise(n_TSS = sum(!is.na(TSS)), .groups="drop") %>%
+         dplyr::pull(n_TSS) == 1L)) {
+  stop("Expected exactly one observed TSS value per replicate.")
+}
 if(anyNA(data_seed$Treatment)) stop("Treatment coding could not be resolved for all observations.")
 if(!all(table(data_seed$Treatment)==20)) stop("Each treatment must contain 20 seeds.")
 
