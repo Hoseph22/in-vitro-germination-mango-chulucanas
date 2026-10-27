@@ -1,12 +1,12 @@
-# In Vitro Germination of Polyembryonic Mango (*Mangifera indica* L.) cv. 'Chulucanas'
+# Interactive Effects of Fruit Maturity Conditions and Organic Supplements on Early *In Vitro* Establishment of Polyembryonic Mango (*Mangifera indica* L.) cv. ‘Chulucanas’
 
 ## Overview
 
-This repository contains the experimental dataset and R code used for the statistical analyses and graphical outputs of the study entitled:
+This repository contains the experimental dataset and R scripts supporting the statistical analyses and figures of the revised manuscript submitted to *Plants* (MDPI; previous manuscript ID: plants-4614048).
 
-**"In Vitro Germination of Polyembryonic Mango (*Mangifera indica* L.) cv. 'Chulucanas' Seeds in Liquid Medium Supplemented with Coconut Water and Lemon Juice"**
+The study examines the interactive effects of fruit maturity conditions, coconut water, and key lime juice on early *in vitro* establishment of polyembryonic mango seeds cv. ‘Chulucanas’.
 
-The study evaluated the effects of fruit maturity stage, coconut water, and lemon juice on the in vitro germination and establishment of polyembryonic mango seeds cv. 'Chulucanas'.
+The revised R script corresponds to the updated statistical analyses following peer review. The original script is retained for transparency and version tracking.
 
 ## Experimental Design
 
